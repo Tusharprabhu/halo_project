@@ -1,0 +1,344 @@
+from flask import Flask, render_template, request
+import scipy.stats as stats
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def calculate_poisson_distribution():
+    lambda_parameter = None
+    pmf_values = []
+    cdf_values = []
+    mean = None
+    variance = None
+
+    if request.method == 'POST':
+        lambda_parameter = float(request.form['lambda_parameter'])
+        poisson_dist = stats.poisson(mu=lambda_parameter)
+
+        for k in range(10):  # You can adjust the range as needed
+            pmf_values.append(poisson_dist.pmf(k))
+            cdf_values.append(poisson_dist.cdf(k))
+
+        mean = poisson_dist.mean()
+        variance = poisson_dist.var()
+
+    return render_template('index.html', lambda_parameter=lambda_parameter, pmf_values=pmf_values, cdf_values=cdf_values, mean=mean, variance=variance)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poisson Distribution Calculator</title>
+</head>
+
+<body>
+    <h1>Poisson Distribution Calculator</h1>
+
+    <form method="post">
+        <label for="lambda_parameter">Enter Lambda Parameter (μ): </label>
+        <input type="number" step="0.01" name="lambda_parameter" required>
+        <button type="submit">Calculate</button>
+    </form>
+
+    {% if lambda_parameter is not none %}
+    <h2>Results:</h2>
+    <p>Mean: {{ mean }}</p>
+    <p>Variance: {{ variance }}</p>
+
+    <h2>Probability Mass Function (PMF) Values:</h2>
+    <ul>
+        {% for pmf_value in pmf_values %}
+        <li>{{ pmf_value }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Cumulative Distribution Function (CDF) Values:</h2>
+    <ul>
+        {% for cdf_value in cdf_values %}
+        <li>{{ cdf_value }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Binomial Expansion Calculator</title>
+</head>
+<body>
+    <h1>Binomial Expansion Calculator</h1>
+    <form method="POST">
+        Enter a function in terms of 'x' and 'n' (e.g., (1+x)**n): <input type="text" name="user_function" required>
+        <input type="submit" value="Calculate Binomial Expansion">
+    </form>
+
+    {% if user_function %}
+    <h2>Results for Function: {{ user_function }}</h2>
+
+    {% if binomial_expansion %}
+    <h3>Binomial Expansion:</h3>
+    <p>{{ binomial_expansion }}</p>
+    {% endif %}
+
+    {% if error_message %}
+    <h3>Error:</h3>
+    <p>{{ error_message }}</p>
+    {% endif %}
+
+    {% endif %}
+</body>
+</html>
+
+
+
+
+
+
+from flask import Flask, render_template, request
+import sympy as sp
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def calculate_binomial_expansion():
+    user_function = None
+    binomial_expansion = None
+
+    if request.method == 'POST':
+        user_function = request.form['user_function']
+        try:
+            user_expr = sp.sympify(user_function)
+            binomial_expansion = sp.expand(user_expr, power_base=True)
+        except sp.SympifyError:
+            error_message = "Invalid input. Please enter a valid mathematical expression."
+
+    return render_template('index.html', user_function=user_function, binomial_expansion=binomial_expansion)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+from flask import Flask, render_template, request
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+app = Flask(_name_)
+
+def user_ode(t, y, equation):
+    try:
+        variables = {'t': t, 'y': y}
+        result = eval(equation, variables)
+        return result
+    except:
+        return 0
+
+@app.route('/', methods=['GET', 'POST'])
+def solve_differential_equation():
+    equation = None
+    initial_t = None
+    initial_y = None
+    t_values = None
+    y_values = None
+
+    if request.method == 'POST':
+        equation = request.form['equation']
+        initial_t = float(request.form['initial_t'])
+        initial_y = float(request.form['initial_y'])
+        t_span = (initial_t, initial_t + 10)
+
+        sol = solve_ivp(user_ode, t_span, [initial_y], args=(equation,), t_eval=np.linspace(initial_t, initial_t + 10, 100))
+        t_values = sol.t
+        y_values = sol.y[0]
+
+    return render_template('index.html', equation=equation, initial_t=initial_t, initial_y=initial_y, t_values=t_values, y_values=y_values)
+
+if _name_ == '_main_':
+    app.run(debug=True)
+
+
+
+
+
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def solve_differential_equation():
+    equation = None
+    initial_t = None
+    initial_y = None
+    t_values = []
+    y_values = []
+
+    if request.method == 'POST':
+        equation = request.form['equation']
+        initial_t = float(request.form['initial_t'])
+        initial_y = float(request.form['initial_y'])
+
+        # Perform calculations to get t_values and y_values
+        # For example, you can use the provided values as placeholders
+        t_values = [0, 1, 2, 3]  
+        y_values = [1, 2, 1, 3]
+
+    return render_template('index.html', equation=equation, initial_t=initial_t, initial_y=initial_y, t_values=t_values, y_values=y_values)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Differential Equation Solver</title>
+</head>
+<body>
+    <h1>Differential Equation Solver</h1>
+    <form method="POST">
+        <label for="equation">Enter the differential equation (e.g., 't - y'): </label>
+        <input type="text" name="equation" required><br>
+        <label for="initial_t">Enter the initial t: </label>
+        <input type="number" step="any" name="initial_t" required><br>
+        <label for="initial_y">Enter the initial y: </label>
+        <input type="number" step="any" name="initial_y" required><br>
+        <input type="submit" value="Solve">
+    </form>
+    
+    {% if equation %}
+    <h2>Results for Equation: {{ equation }}</h2>
+    <h3>Initial t: {{ initial_t }}</h3>
+    <h3>Initial y: {{ initial_y }}</h3>
+    
+    {% if t_values and y_values %}
+    <h3>ODE Solution:</h3>
+    <div class="plot-container">
+        <div id="plot"></div>
+    </div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+    t_values = [0, 1, 2, 3] 
+    y_values = [1, 2, 1, 3]  
+
+        var trace1 = {
+            x: t_values,
+            y: y_values,
+            mode: 'lines',
+            type: 'scatter',
+            name: 'Solution y(t)'
+        };
+        var data = [trace1];
+        
+        var layout = {
+            xaxis: {
+                title: 'Time (t)'
+            },
+            yaxis: {
+                title: 'y(t)'
+            },
+            title: 'Solution of the ODE'
+        };
+        
+        Plotly.newPlot('plot', data, layout);
+    </script>
+    {% endif %}
+    
+    {% endif %}
+</body>
+</html>
+
+
+
+
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+def perform_set_operation(set1, set2, choice):
+    set1 = set(set1)
+    set2 = set(set2)
+    
+    if choice == '1':
+        result = set1.union(set2)
+    elif choice == '2':
+        result = set1.intersection(set2)
+    elif choice == '3':
+        result = set1.difference(set2)
+    elif choice == '4':
+        result = set2.difference(set1)
+    elif choice == '5':
+        result = set1.symmetric_difference(set2)
+    elif choice == '6':
+        result = set1.issubset(set2)
+    elif choice == '7':
+        result = set2.issubset(set1)
+    else:
+        result = "Invalid choice. Please try again."
+    return result
+
+@app.route('/', methods=['GET', 'POST'])
+def set_operation():
+    set1 = request.form.get('set1', '').split(',')
+    set2 = request.form.get('set2', '').split(',')
+    choice = request.form.get('choice', '')
+
+    result = None
+
+    if choice:
+        result = perform_set_operation(set1, set2, choice)
+
+    return render_template('index.html', set1=','.join(set1), set2=','.join(set2), choice=choice, result=result)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Set Operations</title>
+</head>
+<body>
+    <h1>Set Operations</h1>
+    <form method="POST">
+        Enter the first set (comma-separated elements): <input type="text" name="set1" value="{{ set1 }}" required><br>
+        Enter the second set (comma-separated elements): <input type="text" name="set2" value="{{ set2 }}" required><br>
+        <label for="choice">Choose a set operation:</label>
+        <select name="choice" id="choice">
+            <option value="1" {% if choice == '1' %}selected{% endif %}>Union</option>
+            <option value="2" {% if choice == '2' %}selected{% endif %}>Intersection</option>
+            <option value="3" {% if choice == '3' %}selected{% endif %}>Set Difference (Set1 - Set2)</option>
+            <option value="4" {% if choice == '4' %}selected{% endif %}>Set Difference (Set2 - Set1)</option>
+            <option value="5" {% if choice == '5' %}selected{% endif %}>Symmetric Difference</option>
+            <option value="6" {% if choice == '6' %}selected{% endif %}>Check if Set1 is a subset of Set2</option>
+            <option value="7" {% if choice == '7' %}selected{% endif %}>Check if Set2 is a subset of Set1</option>
+        </select>
+        <input type="submit" value="Perform Operation">
+    </form>
+
+    {% if result %}
+    <h2>Result:</h2>
+    <p>{{ result }}</p>
+    {% endif %}
+</body>
+</html>
