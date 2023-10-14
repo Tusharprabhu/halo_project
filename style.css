@@ -1,0 +1,68 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.banner{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(https://imgs.search.brave.com/8wu1Rl7bd6vkadzGgskcysAdzhcvj9cDNXXdTHWityc/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzA0LzUx/LzY4LzA0NTE2OGM1/NjdlNTAzYjM3YjNh/ZTVkZjZhZTA0MWQ4/LmpwZw);
+    background-size: cover;
+    background-position: center;
+}
+
+.navbar{
+    width: 85%;
+    margin: auto;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo{
+    width: 120px;
+    cursor: pointer;
+    
+}
+
+.navbar ul li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+    position: relative;
+}
+.navbar ul li a{
+    text-decoration: none;
+    color: #fff;
+    text-transform: uppercase;
+}
+.navbar ul li::after{
+    content: '';
+    height: 3px;
+    width: 0;
+    background: #009688;
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    transition: 0.5s;
+}
+
+.content{
+    width: 100%;
+    position: absolute;
+    top: 50%
+    transform: translateY(-50%);
+    : center;
+    color: #fff;
+}
+.content h1{
+    font-size: 70px;
+    margin-top: 80px;
+}
+.content p{
+    margin: 20px auto;
+    font-weight: 100;
+    line-height: 25px;
+}
