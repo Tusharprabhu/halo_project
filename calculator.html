@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chat Interface</title>
     <!-- Link the external CSS file -->
-    <link rel="stylesheet" href="calculator.css">
-    <script src="calculator.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/calculator.css') }}">
+    <script src="{{ url_for('static',filename='scripts/calculator.js') }}"></script>
 </head>
     
 <body>
@@ -21,19 +21,19 @@
         </ul>
       </div>
       <div class="sidebar">
-
-
-        <div class="Laplace"></div>
-        <div class="sidebar-item" href="{{}}">Item 2</div>
-        <div class="sidebar-item">Item 3</div>
-        <div class="sidebar-item">Item 4</div>
-        <div class="sidebar-item">Item 5</div>
-        <div class="sidebar-item">Item 6</div>
-        <div class="sidebar-item">Item 7</div>
-        <div class="sidebar-item">Item 8</div>
-        <div class="sidebar-item">Item 9</div>
-        <div class="sidebar-item">Item 10</div>
-    </div>
+        <div class="sidebar-item"><a href="{{url_for('testing')}}">Laplace<a></div>
+        <a href="/test/2"><div class="sidebar-item">Taylor</div></a>
+        <div class="sidebar-item">
+            <a href="/hello"> stastics </a>
+        </div>
+        <div class="sidebar-item">possion's D</div>
+        <div class="sidebar-item">script</div>
+        <div class="sidebar-item">set theory</div>
+        <div class="sidebar-item">graph</div>
+        <div class="sidebar-item">binomial</div>
+        <div class="sidebar-item">analytic</div>
+        <div class="sidebar-item">gobi</div>
+    </div>
     
     
     
